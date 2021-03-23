@@ -28,7 +28,7 @@ namespace SS_API.Services
             _options = contextOptions;
         }
 
-        public async Task<int> InsertProject(Project project)
+        public int InsertProject(Project project)
         {
             using (var db = new StreamerContext(_options))
             {
@@ -97,7 +97,7 @@ namespace SS_API.Services
             {
                 try
                 {
-                    db.Update(project);
+                    db.Projects.Update(project);
                     db.SaveChanges();
                     updateState = true;
                 }
