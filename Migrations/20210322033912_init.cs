@@ -25,6 +25,7 @@ namespace SS_API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Image = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: false),
                     Why = table.Column<string>(nullable: true),
                     WhatWillWeDo = table.Column<string>(nullable: true),
