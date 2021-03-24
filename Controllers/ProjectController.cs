@@ -12,7 +12,14 @@ namespace SS_API.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
+        /// <summary>
+        /// Serviços do modelo Project.
+        /// </summary>
         private ProjectServices _services;
+
+        /// <summary>
+        /// Serviços de Logging.
+        /// </summary>
         private ILogger _logger;
 
 
@@ -23,10 +30,11 @@ namespace SS_API.Controllers
         }
 
         /// <summary>
-        /// Teste de documentação
+        /// Realiza a leitura e um Projeto correspondente ao identificador <paramref name="id"/> fornecido.
         /// </summary>
-        /// <param name="id">Teste de parâmetro</param>
-        /// <returns>Teste de retorno</returns>
+        /// <param name="id">Identificador do Projeto a ser lido.</param>
+        /// <response code="200">Retorna o Projeto encontrado.</response>
+        /// <response code="204">Retorna vazio caso nada seja encontrado.</response> 
         [HttpGet("[action]/{id}")]
         public ActionResult<Project> GetById(int id)
         {
@@ -51,7 +59,13 @@ namespace SS_API.Controllers
             }
         }
 
-        [HttpGet("[action]/{id}")]
+        /// <summary>
+        /// Realiza a leitura de vários Projetos correspondentes ao identificador de um Curso <paramref name="id"/> fornecido.
+        /// </summary>
+        /// <param name="id">Identificador do Projeto a ser lido.</param> 
+        /// <response code="200">Retorna uma lista genérica contendo os Projetos encontrados.</response>
+        /// <response code="204">Retorna vazio caso nada seja encontrado.</response>
+        [HttpGet("[action]/{courseId}")]
         public ActionResult<List<Project>> GetByCourse(int courseId)
         {
             try
@@ -75,21 +89,17 @@ namespace SS_API.Controllers
             }
         }
 
-        [HttpPost("[action]/{name}/{courseId}")]
-        public ActionResult<int> Create(string name, string image, string why, string what, string whatWillWeDo, int projectStatus, int courseId)
+        /// <summary>
+        /// Cria um novo Projeto com base no <paramref name="project"/> fornecido.
+        /// </summary>
+        /// <param name="project">Objeto do Projeto a ser criado.</param>
+        /// <response code="201">Retorna um int referente a identificação do Projeto Inserido.</response>
+        [HttpPost("[action]")]
+        public ActionResult<int> Create([FromBody] Project project)
         {
             try
             {
-                Project project = new Project()
-                {
-                    Name = name,
-                    Image = image,
-                    Why = why,
-                    What = what,
-                    WhatWillWeDo = whatWillWeDo,
-                    ProjectStatus = (ProjectStatus)projectStatus,
-                    CourseId = courseId
-                };
+                project.Course = null;
 
                 int addedProjectId = _services.InsertProject(project);
                 return Created("project", addedProjectId);
@@ -97,10 +107,10 @@ namespace SS_API.Controllers
             catch (Exception e)
             {
                 _logger.LogError($"Ocorreu uma exceção ao Inserir um Projeto!\n" +
-                                 $"Parâmetros: {{image:{image}}} / " +
-                                 $"{{name:{name}}} / {{why:{why}}} / " +
-                                 $"{{whatWillWeDo:{whatWillWeDo}}} / {{what:{what}}} / " +
-                                 $"{{projectStatus:{projectStatus}}} / {{courseId:{courseId}}}\n" +
+                                 $"Parâmetros: {{image:{project.Image}}} / " +
+                                 $"{{name:{project.Name}}} / {{why:{project.Why}}} / " +
+                                 $"{{whatWillWeDo:{project.WhatWillWeDo}}} / {{what:{project.What}}} / " +
+                                 $"{{projectStatus:{project.ProjectStatus}}} / {{courseId:{project.CourseId}}}\n" +
                                  $"Exceção: {e.ToString()}");
 
                 return Problem(
@@ -109,6 +119,12 @@ namespace SS_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Deleta um Projeto com base no Identificador <paramref name="id"/> fornecido.
+        /// </summary>
+        /// <param name="id">Identificador do Projeto a ser deletado.</param>
+        /// <response code="200">Retorna um boolean(true) pois este Projeto já foi Deletado.</response>
+        /// <response code="202">Retorna um boolean representando o Status do Delete: Sucesso(true) ou Fracasso(false)</response>
         [HttpDelete("[action]/{id}")]
         public ActionResult<bool> Delete(int id)
         {
@@ -135,6 +151,11 @@ namespace SS_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Atualiza um Projeto com os dados fornecidos dentro do Objeto do tipo Project.
+        /// </summary>
+        /// <param name="project">Project a ser atualizado (Deve ser passado através do Body).</param>
+        /// <response code="200">Retorna um boolean representando o Status da Atualização: Sucesso(true) ou Fracasso(false)</response>
         [HttpPut("[action]")]
         public ActionResult<bool> Update([FromBody] Project project)
         {

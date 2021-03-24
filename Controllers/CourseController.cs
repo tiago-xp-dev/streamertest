@@ -11,7 +11,14 @@ namespace SS_API.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
+        /// <summary>
+        /// Serviços do modelo Course.
+        /// </summary>
         private CourseServices _services;
+
+        /// <summary>
+        /// Serviços de Logging.
+        /// </summary>
         private ILogger _logger;
 
         public CourseController(ILoggerFactory logger)
@@ -21,10 +28,11 @@ namespace SS_API.Controllers
         }
 
         /// <summary>
-        /// Teste de documentação
+        /// Realiza a leitura de um Curso correspondente ao identificador <paramref name="id"/> fornecido.
         /// </summary>
-        /// <param name="id">Teste de parâmetro</param>
-        /// <returns>Teste de retorno</returns>
+        /// <param name="id">Identificador do Curso a ser lido.</param>
+        /// <response code="200">Retorna o Curso encontrado.</response>
+        /// <response code="204">Retorna vazio caso nada seja encontrado.</response> 
         [HttpGet("[action]/{id}")]
         public ActionResult<Course> GetById(int id)
         {
@@ -49,13 +57,18 @@ namespace SS_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Realiza a leitura de TODOS os Cursos.
+        /// </summary> 
+        /// <response code="200">Retorna uma lista genérica contendo os Cursos encontrados.</response>
+        /// <response code="204">Retorna vazio caso nada seja encontrado.</response>
         [HttpGet("[action]")]
         public ActionResult<List<Course>> GetAllCourses()
         {
             try
             {
                 List<Course> results = _services.GetAllCourses();
-                
+
                 if (results.Count == 0)
                     return NoContent();
 
@@ -71,23 +84,23 @@ namespace SS_API.Controllers
             }
         }
 
-        [HttpPost("[action]/{name}")]
-        public ActionResult<int> Create(string name)
+        /// <summary>
+        /// Cria um novo Curso com o <paramref name="course"/> fornecido.
+        /// </summary>
+        /// <param name="course">O Objeto do Curso a ser criado (Deve ser passado através do Body).</param>
+        /// <response code="201">Retorna um int referente a identificação do Curso Inserido.</response>
+        [HttpPost("[action]")]
+        public ActionResult<int> Create([FromBody] Course course)
         {
             try
             {
-                Course course = new Course()
-                {
-                    Name = name,
-                };
-
                 int addedCourseId = _services.InsertCourse(course);
                 return Created("course", addedCourseId);
             }
             catch (Exception e)
             {
                 _logger.LogError($"Ocorreu uma exceção ao Inserir um Curso!\n" +
-                                 $"Parâmetros: {{name:{name}}}\n" +
+                                 $"Parâmetros: {{name:{course.Name}}}\n" +
                                  $"Exceção: {e.ToString()}");
 
                 return Problem(
@@ -96,6 +109,12 @@ namespace SS_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Deleta um Curso e todos os projetos correspondentes com base no Identificador <paramref name="id"/> fornecido.
+        /// </summary>
+        /// <param name="id">Identificador do Curso a ser deletado.</param>
+        /// <response code="200">Retorna um boolean(true) pois este Projeto já foi Deletado.</response>
+        /// <response code="202">Retorna um boolean representando o Status do Delete: Sucesso(true) ou Fracasso(false)</response>
         [HttpDelete("[action]/{id}")]
         public ActionResult<bool> Delete(int id)
         {
@@ -122,6 +141,11 @@ namespace SS_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Atualiza um Curso com os dados fornecidos dentro do Objeto do tipo Course.
+        /// </summary>
+        /// <param name="course">Curso a ser atualizado (Deve ser passado através do Body).</param>
+        /// <response code="200">Retorna um boolean representando o Status da Update: Sucesso(true) ou Fracasso(false)</response>
         [HttpPut("[action]")]
         public ActionResult<bool> Update([FromBody] Course course)
         {
