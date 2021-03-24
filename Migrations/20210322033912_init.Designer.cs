@@ -8,14 +8,14 @@ using SS_API.Data;
 namespace SS_API.Migrations
 {
     [DbContext(typeof(StreamerContext))]
-    [Migration("20210321020757_init")]
+    [Migration("20210322033912_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113");
+                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
 
             modelBuilder.Entity("SS_API.Model.Course", b =>
                 {
@@ -35,6 +35,8 @@ namespace SS_API.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("CourseId");
+
+                    b.Property<string>("Image");
 
                     b.Property<string>("Name")
                         .IsRequired();
