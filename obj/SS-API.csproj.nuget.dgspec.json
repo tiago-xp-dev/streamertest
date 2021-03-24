@@ -1,32 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "/Users/joaopaulomendonca/Documents/clientes/Streamer/StreamerSky/testeContratacao/streamertest/SS-API.csproj": {}
+    "/home/tiago/Documentos/Meus Projetos/Web/streamertest/SS-API.csproj": {}
   },
   "projects": {
-    "/Users/joaopaulomendonca/Documents/clientes/Streamer/StreamerSky/testeContratacao/streamertest/SS-API.csproj": {
+    "/home/tiago/Documentos/Meus Projetos/Web/streamertest/SS-API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/joaopaulomendonca/Documents/clientes/Streamer/StreamerSky/testeContratacao/streamertest/SS-API.csproj",
+        "projectUniqueName": "/home/tiago/Documentos/Meus Projetos/Web/streamertest/SS-API.csproj",
         "projectName": "SS-API",
-        "projectPath": "/Users/joaopaulomendonca/Documents/clientes/Streamer/StreamerSky/testeContratacao/streamertest/SS-API.csproj",
-        "packagesPath": "/Users/joaopaulomendonca/.nuget/packages/",
-        "outputPath": "/Users/joaopaulomendonca/Documents/clientes/Streamer/StreamerSky/testeContratacao/streamertest/obj/",
+        "projectPath": "/home/tiago/Documentos/Meus Projetos/Web/streamertest/SS-API.csproj",
+        "packagesPath": "/home/tiago/.nuget/packages/",
+        "outputPath": "/home/tiago/Documentos/Meus Projetos/Web/streamertest/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "/Users/joaopaulomendonca/.nuget/NuGet/NuGet.Config"
+          "/home/tiago/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp2.2"
+          "netcoreapp3.1"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp2.2": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -37,22 +38,12 @@
         }
       },
       "frameworks": {
-        "netcoreapp2.2": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "DocumentFormat.OpenXml": {
               "target": "Package",
               "version": "[2.11.3, )"
-            },
-            "Microsoft.AspNetCore.App": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.2.0, )",
-              "autoReferenced": true
-            },
-            "Microsoft.AspNetCore.Razor.Design": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.2.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -70,15 +61,13 @@
               "target": "Package",
               "version": "[2.2.0, )"
             },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.Extensions.PlatformAbstractions": {
               "target": "Package",
               "version": "[1.1.0, )"
-            },
-            "Microsoft.NETCore.App": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.2.0, )",
-              "autoReferenced": true
             },
             "Microsoft.OpenApi": {
               "target": "Package",
@@ -86,7 +75,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[2.2.4, )"
+              "version": "[2.2.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -103,7 +92,25 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[3.1.13, 3.1.13]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.201/RuntimeIdentifierGraph.json"
         }
       }
     }
