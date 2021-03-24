@@ -1,27 +1,26 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SS_API.Data;
 using SS_API.Model;
+using SS_API.Utils;
 
 namespace SS_API.Services
 {
     public class CourseServices
     {
-        private readonly static IConfigurationBuilder _builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-        private readonly static IConfigurationRoot _configuration = _builder.Build();
         private DbContextOptions<StreamerContext> _options;
 
         public CourseServices()
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            ConfigurationUtils ConfigUtils = new ConfigurationUtils();
+
+            var connectionString = ConfigUtils.Configuration
+            .GetConnectionString("DefaultConnection");
 
             var contextOptions = new DbContextOptionsBuilder<StreamerContext>()
-                .UseSqlite(connectionString).Options;
+            .UseSqlite(connectionString).Options;
 
             _options = contextOptions;
         }

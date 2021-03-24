@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SS_API.Model;
 using SS_API.Services;
 
@@ -10,11 +11,13 @@ namespace SS_API.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
-        CourseServices services;
+        private CourseServices _services;
+        private ILogger _logger;
 
-        public CourseController()
+        public CourseController(ILoggerFactory logger)
         {
-            services = new CourseServices();
+            _services = new CourseServices();
+            _logger = logger.CreateLogger("CourseLogger");
         }
 
         /// <summary>
@@ -27,7 +30,7 @@ namespace SS_API.Controllers
         {
             try
             {
-                Course result = services.GetCourseById(id);
+                Course result = _services.GetCourseById(id);
 
                 if (result == null)
                     return NoContent();
@@ -36,6 +39,10 @@ namespace SS_API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError($"Ocorreu uma exceção ao Ler um Curso!\n" +
+                                 $"Parâmetros: {{id:{id}}}\n" +
+                                 $"Exceção: {e.ToString()}");
+
                 return Problem(
                     title: "Não foi possível Ler o Curso devido a um erro interno, tente novamente mais tarde!",
                     type: e.HResult.ToString());
@@ -47,8 +54,8 @@ namespace SS_API.Controllers
         {
             try
             {
-                List<Course> results = services.GetAllCourses();
-
+                List<Course> results = _services.GetAllCourses();
+                
                 if (results.Count == 0)
                     return NoContent();
 
@@ -56,6 +63,8 @@ namespace SS_API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError("Ocorreu uma exceção ao Ler todos os Cursos!\n" +
+                                 "Exceção: " + e.ToString());
                 return Problem(
                     title: "Não foi possível Ler os Cursos devido a um erro interno, tente novamente mais tarde!",
                     type: e.HResult.ToString());
@@ -67,18 +76,22 @@ namespace SS_API.Controllers
         {
             try
             {
-                Course course= new Course()
+                Course course = new Course()
                 {
-                    Name = name,                   
+                    Name = name,
                 };
-                
-                int addedCourseId = services.InsertCourse(course);
+
+                int addedCourseId = _services.InsertCourse(course);
                 return Created("course", addedCourseId);
             }
             catch (Exception e)
             {
+                _logger.LogError($"Ocorreu uma exceção ao Inserir um Curso!\n" +
+                                 $"Parâmetros: {{name:{name}}}\n" +
+                                 $"Exceção: {e.ToString()}");
+
                 return Problem(
-                    title: "Não foi possível inserir o Curso devido a um erro interno, tente novamente mais tarde!",
+                    title: "Não foi possível Inserir o Curso devido a um erro interno, tente novamente mais tarde!",
                     type: e.HResult.ToString());
             }
         }
@@ -88,17 +101,21 @@ namespace SS_API.Controllers
         {
             try
             {
-                Course courseToDelete = services.GetCourseById(id);
+                Course courseToDelete = _services.GetCourseById(id);
 
                 if (courseToDelete == null)
                     return Ok(true);
 
-                bool deleteState = services.DeleteCourse(courseToDelete);
+                bool deleteState = _services.DeleteCourse(courseToDelete);
 
                 return Accepted(deleteState);
             }
             catch (Exception e)
             {
+                _logger.LogError($"Ocorreu uma exceção ao Deletar um Curso!\n" +
+                                 $"Parâmetros: {{id:{id}}}\n" +
+                                 $"Exceção: {e.ToString()}");
+
                 return Problem(
                     title: "Não foi possível Deletar o Curso devido a um erro interno, tente novamente mais tarde!",
                     type: e.HResult.ToString());
@@ -110,14 +127,18 @@ namespace SS_API.Controllers
         {
             try
             {
-                bool updateState = services.UpdateCourse(course);
+                bool updateState = _services.UpdateCourse(course);
 
                 return Ok(updateState);
             }
             catch (Exception e)
             {
+                _logger.LogError($"Ocorreu uma exceção ao Atualizar um Curso!\n" +
+                                 $"Parâmetros: {{Course.Id:{course.Id}}} / {{Course.Name:{course.Name}}}\n" +
+                                 $"Exceção: {e.ToString()}");
+
                 return Problem(
-                    title: "Não foi possível atualizar o Curso devido a um erro interno, tente novamente mais tarde!",
+                    title: "Não foi possível Atualizar o Curso devido a um erro interno, tente novamente mais tarde!",
                     type: e.HResult.ToString());
             }
         }

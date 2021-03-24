@@ -1,26 +1,23 @@
-using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SS_API.Data;
 using SS_API.Model;
-using System.Linq;
-using System.IO;
-using System;
-using System.Collections.Generic;
+using SS_API.Utils;
 
 namespace SS_API.Services
 {
     public class ProjectServices
     {
-        private readonly static IConfigurationBuilder _builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-        private readonly static IConfigurationRoot _configuration = _builder.Build();
         private DbContextOptions<StreamerContext> _options;
 
         public ProjectServices()
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            ConfigurationUtils ConfigUtils = new ConfigurationUtils();
+
+            var connectionString = ConfigUtils.Configuration
+            .GetConnectionString("DefaultConnection");
 
             var contextOptions = new DbContextOptionsBuilder<StreamerContext>()
             .UseSqlite(connectionString).Options;
