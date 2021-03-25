@@ -8,10 +8,19 @@ using SS_API.Utils;
 
 namespace SS_API.Services
 {
+    /// <summary>
+    /// Serviços para a relização da interação entre a tabela de Cursos e o código.
+    /// </summary>
     public class CourseServices
     {
+        /// <summary>
+        /// Opções do Contexto do Banco de Dados.
+        /// </summary>
         private DbContextOptions<StreamerContext> _options;
 
+        /// <summary>
+        /// Configura e instancia um novo <see cref="CourseServices"/>.
+        /// </summary>
         public CourseServices()
         {
             ConfigurationUtils ConfigUtils = new ConfigurationUtils();
@@ -25,6 +34,11 @@ namespace SS_API.Services
             _options = contextOptions;
         }
 
+        /// <summary>
+        /// Insere um novo Curso ao banco de dados com base no <seealso cref="Course"/>> fornecido.
+        /// </summary>
+        /// <param name="course">O Curso a ser inserido no banco de dados.</param>
+        /// <returns><see cref="int"/> Identificador primário do Curso inserido.</returns>
         public int InsertCourse(Course course)
         {
             using (var db = new StreamerContext(_options))
@@ -36,6 +50,10 @@ namespace SS_API.Services
             }
         }
 
+        /// <summary>
+        /// Lê todos os Cursos existentes no banco de dados. 
+        /// </summary>
+        /// <returns><see cref="List{Course}"/> Lista genérica contendo todos os Cursos.</returns>
         public List<Course> GetAllCourses()
         {
             using (var db = new StreamerContext(_options))
@@ -46,6 +64,11 @@ namespace SS_API.Services
             }
         }
 
+        /// <summary>
+        /// Lê um Curso existente no banco de dados com base no identificador primário <see cref="int"/> fornecido. 
+        /// </summary>
+        /// <param name="id">O Identificador primário do curso a ser lido.</param>
+        /// <returns><see cref="Course"/>Curso lido.</returns>
         public Course GetCourseById(int id)
         {
             using (var db = new StreamerContext(_options))
@@ -61,6 +84,11 @@ namespace SS_API.Services
             }
         }
 
+        /// <summary>
+        /// Atualiza um Curso existente no banco de dados com base no <see cref="Course"/> fornecido. 
+        /// </summary>
+        /// <param name="course">O Curso a ser atualizado.</param>
+        /// <returns><see cref="bool"/>Indicando se o curso foi(1) ou não(0) atualizado.</returns>
         public bool UpdateCourse(Course course)
         {
             bool updateState;
@@ -82,6 +110,11 @@ namespace SS_API.Services
             return updateState;
         }
 
+        /// <summary>
+        /// Deleta um Curso existente no banco de dados com base no <see cref="Course"/> fornecido. 
+        /// </summary>
+        /// <param name="course">O Curso a ser deletado.</param>
+        /// <returns><see cref="bool"/>Indicando se o curso foi(1) ou não(0) deletado.</returns>
         public bool DeleteCourse(Course course)
         {
             bool deleteState;
