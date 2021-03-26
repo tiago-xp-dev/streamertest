@@ -15,7 +15,8 @@ namespace SS_API
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        readonly string OriginSpecifications = "_originSpecifications";
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -29,19 +30,27 @@ namespace SS_API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StreamerContext>(
-                x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
-            );
-            services.AddMvc();
+            services.AddControllers();
+
+            services.AddCors(options =>
+                {
+                    options.AddPolicy(name: OriginSpecifications,
+                                      builder =>
+                                      {
+                                          builder.WithOrigins("http://localhost:4200")
+                                                 .AllowAnyHeader()
+                                                 .AllowAnyMethod();
+                                      });
+                });
 
             // Configurando o serviço de documentação do Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1",
+                c.SwaggerDoc("v2",
                     new OpenApiInfo
                     {
                         Title = "SS Test",
-                        Version = "v1",
+                        Version = "v2",
                         Description = "Streamer - Aplicação de teste",
                         Contact = new OpenApiContact
                         {
@@ -58,23 +67,36 @@ namespace SS_API
 
                 c.IncludeXmlComments(caminhoXmlDoc);
             });
+
+            services.AddDbContext<StreamerContext>(
+                x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+            );
         }
 
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory = LoggerFactory.Create(
+                builder => builder.AddConfiguration(Configuration.GetSection("Logging"))
+                .AddConsole()
+                .AddDebug());
 
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseCors(OriginSpecifications);
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             // Ativando middlewares para uso do Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                c.SwaggerEndpoint("/swagger/v2/swagger.json",
                     "Streamer - Aplicação de teste");
                 c.RoutePrefix = string.Empty;
             });
