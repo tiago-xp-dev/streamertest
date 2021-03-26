@@ -15,6 +15,7 @@ namespace SS_API
 {
     public class Startup
     {
+        readonly string OriginSpecifications = "_originSpecifications";
         public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -30,6 +31,17 @@ namespace SS_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options =>
+                {
+                    options.AddPolicy(name: OriginSpecifications,
+                                      builder =>
+                                      {
+                                          builder.WithOrigins("http://localhost:4200")
+                                                 .AllowAnyHeader()
+                                                 .AllowAnyMethod();
+                                      });
+                });
 
             // Configurando o serviço de documentação do Swagger
             services.AddSwaggerGen(c =>
@@ -72,6 +84,8 @@ namespace SS_API
                 .AddDebug());
 
             app.UseRouting();
+
+            app.UseCors(OriginSpecifications);
 
             app.UseEndpoints(endpoints =>
             {
