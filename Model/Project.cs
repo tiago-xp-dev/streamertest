@@ -22,6 +22,7 @@ namespace SS_API.Model
         /// <summary>
         /// Nome do Projeto.
         /// </summary>
+        [Required]
         public string Name { get; set; }
 
         /// <summary>
@@ -52,6 +53,7 @@ namespace SS_API.Model
         /// <summary>
         /// Identificador primário do Curso deste Projeto no Banco de Dados.
         /// </summary>
+        [Required]
         public int CourseId { get; set; }
     }
 }
